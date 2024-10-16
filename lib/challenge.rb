@@ -70,14 +70,16 @@ end
 # Create the output file and add the content to it
 class CreateOutputFile
   def initialize(**attrs)
-    @file_name = attrs.fetch(:file_name, 'files/output.txt')
+    @file_name = attrs.fetch(:file_name, 'output.txt')
     @companies = attrs.fetch(:companies, [])
   end
 
   def create_file
     return p "File '#{@file_name}' already exists!" if File.exist?(@file_name)
 
-    File.open(@file_name, 'a') do |file|
+    Dir.mkdir('files') unless Dir.exist?('files')
+
+    File.open("files/#{@file_name}", 'w') do |file|
       @companies.each do |company|
         next unless (company['total_top_ups']).positive?
 
